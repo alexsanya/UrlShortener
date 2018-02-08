@@ -1,4 +1,5 @@
 const crypto = require('crypto');
+const linksLength = 7;
 
 (() => {
   'use strict';
@@ -7,10 +8,17 @@ const crypto = require('crypto');
 
   class Encryptor {
 
-    getUniqueLink() {
+    getUniqueLink(url) {
+      const key = uid(10);
+      const linkId = crypto
+        .createHmac('sha256', key)
+        .update(url)
+        .digest('hex')
+        .substr(0, linksLength);
+
       return {
-        url: uid(10),
-        key: 35
+        url: linkId,
+        key
       }
     }
 

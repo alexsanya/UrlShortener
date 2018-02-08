@@ -24,7 +24,7 @@ const server = restify.createServer({
       apiController.reportWrongInput(res);
       return next();
     }
-    const linkData = encryptor.getUniqueLink();
+    const linkData = encryptor.getUniqueLink(url);
     const link = linksMap.storeShortUrl(linkData.url, url);
     apiController.reportCreatedLink(res, linkData);
     console.info('Short URL created: ', linkData.url);
@@ -42,6 +42,29 @@ const server = restify.createServer({
     }
     console.info('Redirect to original link: ', originalLink);
     apiController.redirectToOriginal(res, originalLink);
+    return next();
+  });
+
+  server.del('/link/:linkId', (req, res, next) => {
+    console.log(JSON.stringify(req.headers));
+    const linkId = req.params.linkId;
+    const key = req.headers['x-auth-key'];
+    const url = linksMap.getUrl(linkId);
+    console.info('Request to remove link ', linkId);
+    if (!url) {
+      console.error('Url not found for shortlink ', linkId);
+      apiController.reportLinkNotFound(res);
+      return next();
+    }
+    console.log('Key = ', key);
+    if ((typeof key === 'string') && validator.isValidKey(key, linkId, url)) {
+      console.info('Removing link ', linkId);
+      linksMap.removeShortLink(linkId);
+      apiController.reportDeletedLink(res);
+      return next();
+    }
+    console.error('Authentification failed for link ', linkId, ' key ', key);
+    apiController.reportNoCredentials(res);
     return next();
   });
    
