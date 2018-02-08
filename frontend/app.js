@@ -4,10 +4,7 @@
   
   app.controller('urlsController', function($scope, $http){
     
-    $scope.records = [{
-      shortLink: 'abcde',
-      fullLink: 'http://some-webpage.com'
-    }];
+    $scope.records = [];
     
     $scope.addRecord = function() {
       var data = {
@@ -20,17 +17,27 @@
         $scope.records.push({
           shortLink: domain + '/link/' + data.shortenUrl,
           key: data.key,
-          fullLink: $scope.fullLink
+          linkId: data.shortenUrl,
+          fullLink: $scope.fullLink.substr(0, 90)
         });
       })
     };
     
-    // Delete Note
-    // $scope.delete = function (i) {
-    //   var r = confirm("Are you sure you want to delete this link?");
-    //   if (r == true) 
-    //     $scope.notes.splice(i, 1);
-    // };
+    $scope.delete = function (i) {
+      var r = confirm("Are you sure you want to delete this link?");
+      if (r) {
+        var record = $scope.records[i];
+        $http.delete('/link/' + record.linkId, {
+            headers : {
+              'x-auth-key': record.key
+            }
+        })
+        .success(function () {
+          $scope.records.splice(i, 1);
+        })
+        
+      }
+    };
   
   // End Controller
   });
