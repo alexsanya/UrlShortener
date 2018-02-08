@@ -1,0 +1,19 @@
+{
+  "name": "url_shortener",
+  "version": "1.0.0",
+  "description": "Backend assignment for Appsynth",
+  "main": "app.js",
+  "scripts": {
+    "test": "mocha spec"
+  },
+  "author": "Alexander Koval",
+  "license": "ISC",
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "mocha": "^5.0.0"
+  },
+  "dependencies": {
+    "restify": "^6.3.4",
+    "uid": "0.0.2"
+  }
+}

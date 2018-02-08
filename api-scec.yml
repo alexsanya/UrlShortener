@@ -1,0 +1,73 @@
+swagger: "2.0"
+info:
+  description: "Client interface for URL shortenner service"
+  version: "1.0.0"
+  title: "Url shortener client API"
+host: "shortUrl.local"
+basePath: "/api"
+schemes:
+- "http"
+paths:
+  /link/create:
+    post:
+      summary: "Create new short url link"
+      consumes:
+      - "text/plain"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "The url string that needs to be shortenned"
+        required: true
+      responses:
+        201:
+          description: "Link successfully created"
+          schema:
+            $ref: "#/definitions/LinkData"
+        400:
+          description: "Invalid input"
+  /link/{linkId}:
+    delete:
+      summary: "Remove short link"
+      parameters:
+      - name: "linkId"
+        in: "path"
+        required: true
+        description: "Short unic id generated for URL"
+      - in: "header"
+        name: "security token"
+        description: "this token should identify the user who created this link"
+      responses:
+        204:
+          description: "Link deleted"
+        400:
+          description: "Invalid ID format"
+        401:
+          description: "Incorrect token"
+        404:
+          description: "Link not fond"
+    get:
+      summary: "Get url corresponded to short link"
+      parameters:
+      - in: "path"
+        name: "linkId"
+        required: true
+        description: "Short unic id generated for URL"
+      responses:
+        301:
+          description: "Original link"
+        400:
+          description: "Wrong link format"
+        404:
+          description: "Link not found"
+definitions:
+  LinkData:
+    type: "object"
+    properties:
+      url:
+        type: "string"
+      key:
+        type: "string"
+          
+ 
