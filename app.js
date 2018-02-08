@@ -25,7 +25,7 @@ async function app(console) {
            reject();
         } 
         console.info('Connection with memcached established');
-        resolve(conn);
+        resolve(memcached);
       })
     });
   }

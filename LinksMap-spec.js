@@ -7,15 +7,43 @@
 
   const LinksMap = require('./LinksMap');
 
+  class MockMemCached {
+
+    constructor() {
+      this.map = new Map();
+    }
+
+    get(linkId, callback) {
+      const url = this.map.get(linkId);
+      if (url) callback(null, url)
+      else callback('error', null) 
+    }
+
+    set(linkId, url, ttl, callback) {
+      this.map.set(linkId, url);
+      callback(null);
+    }
+
+    del(linkId, callback)  {
+      this.map.delete(linkId);
+      callback(null);
+    }
+
+  }
+
+  MockMemCached.create = () => {
+    return new MockMemCached();
+  }
+
   describe('links map', () => {
 
       let linksMap;
 
       beforeEach(() => {
-        linksMap = new LinksMap();
+        linksMap = LinksMap.create(MockMemCached.create());
       })
 
-      it('should return nothing if key ont exists', async () => {
+      it('should return nothing if key not exists', async () => {
         const url = await linksMap.getUrl('abcde');
         expect(url).to.be.a('undefined');
       })
