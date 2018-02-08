@@ -1,10 +1,11 @@
 const crypto = require('crypto');
-const linksLength = 7;
+const config = require('./config');
 
 (() => {
   'use strict';
 
-  const mask = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/gi
+  const mask = config.urlRegex;
+  const linksLength = config.shortLinksLength;
 
   class Validator {
 

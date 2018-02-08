@@ -18,6 +18,14 @@
       }).end();
     }
 
+    reportDeletedLink(res) {
+      res.send(204, 'Link removed').end();
+    }
+
+    reportNoCredentials(res) {
+      res.send(401, 'Wrong token').end();
+    }
+
     redirectToOriginal(res, url) {
       res.writeHead(301, {
         Location: url

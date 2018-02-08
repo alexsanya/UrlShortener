@@ -46,7 +46,6 @@ const server = restify.createServer({
   });
 
   server.del('/link/:linkId', (req, res, next) => {
-    console.log(JSON.stringify(req.headers));
     const linkId = req.params.linkId;
     const key = req.headers['x-auth-key'];
     const url = linksMap.getUrl(linkId);
