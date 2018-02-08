@@ -4,7 +4,8 @@
   "description": "Backend assignment for Appsynth",
   "main": "app.js",
   "scripts": {
-    "test": "mocha spec"
+    "test": "mocha spec",
+    "start": "node run.js"
   },
   "author": "Alexander Koval",
   "license": "ISC",

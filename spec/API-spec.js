@@ -11,7 +11,7 @@
   const urlencode = require('urlencode');
   const clients = require('restify-clients');
   const expect = chai.expect;
-  const app = require('./app')(mockConsole);
+  const app = require('../app')(mockConsole);
   chai.should();
 
   describe('API', () => {

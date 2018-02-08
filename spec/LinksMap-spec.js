@@ -5,7 +5,7 @@
   const expect = chai.expect;
   chai.should();
 
-  const LinksMap = require('./LinksMap');
+  const LinksMap = require('../LinksMap');
 
   class MockMemCached {
 

@@ -4,8 +4,8 @@
   const chai = require('chai');
   const expect = chai.expect;
 
-  const Validator = require('./Validator');
-  const Encryptor = require('./Encryptor');
+  const Validator = require('../Validator');
+  const Encryptor = require('../Encryptor');
 
   describe('validator', () => {
 
