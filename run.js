@@ -1,1 +1,1 @@
-require('./app')(console);
+const server = require('./app')(console);

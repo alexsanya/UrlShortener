@@ -1,0 +1,17 @@
+<h1 class="header">Url Shortener</h1>
+<script type="text/javascript" src="angular.min.js"></script>
+<script type="text/javascript" src="app.js"></script>
+<div ng-app="urlShortener" class="app">
+  <div ng-controller="urlsController">
+    <div>
+      <input name="url" ng-model="fullLink">
+      <button name="add" ng-click="addRecord()">Make it short</button>
+    </div>
+    <table>
+      <tr ng-repeat="record in records">
+        <td><a target="_blank" href = {{record.shortLink}}>{{record.shortLink}}</a></td>
+        <td>{{record.fullLink}}</td>
+      </tr>
+    </table>
+  </div>
+</div>

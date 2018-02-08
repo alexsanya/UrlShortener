@@ -96,6 +96,18 @@ async function app(console) {
     apiController.reportNoCredentials(res);
     return next();
   });
+
+
+  server.get('/\/.*/', restify.plugins.serveStatic({
+
+    directory: __dirname + "/frontend/",
+    default: './index.html' 
+
+   })
+  );
+
+
+  return server;
 }
 
 module.exports = app;

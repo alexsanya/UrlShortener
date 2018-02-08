@@ -16,7 +16,7 @@
     get(linkId, callback) {
       const url = this.map.get(linkId);
       if (url) callback(null, url)
-      else callback('error', null) 
+      else callback(null) 
     }
 
     set(linkId, url, ttl, callback) {
