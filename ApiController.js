@@ -26,6 +26,10 @@
       res.send(401, 'Wrong token').end();
     }
 
+    reportServerFailure(err) {
+      res.send(500, err).end();
+    }
+
     redirectToOriginal(res, url) {
       res.writeHead(301, {
         Location: url

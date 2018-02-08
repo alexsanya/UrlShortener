@@ -8,7 +8,7 @@
     
     $scope.addRecord = function() {
       var data = {
-        url: $scope.fullLink
+        url: encodeURI($scope.fullLink)
       }
       $http.post('/link/create', data)
       .success(function (data) {

@@ -1,8 +1,6 @@
 FROM node:8
 
 ENV user node
-# Add our user and group first to make sure their IDs get assigned consistently
-RUN groupadd -r $user && useradd -r -g $user $user
 
 # Create app directory
 RUN mkdir -p /$user/src/app

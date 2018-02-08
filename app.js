@@ -16,12 +16,12 @@ async function app(console) {
   server.use(restify.plugins.bodyParser());
 
   function connectToMemcache() {
-    const memcached = new Memcached();
+    const memcached = new Memcached(config.memcachedConnection);
 
     return new Promise((resolve, reject) => {
       memcached.connect(config.memcachedConnection, ( err, conn ) => {
         if( err ) {
-           console.error('Cannot establist connection with memcached', conn.server);
+           console.error('Cannot establish connection with memcached', conn.server);
            reject();
         } 
         console.info('Connection with memcached established');
@@ -55,16 +55,27 @@ async function app(console) {
       return next();
     }
     const linkData = encryptor.getUniqueLink(url);
-    const link = await linksMap.storeShortUrl(linkData.url, url);
-    apiController.reportCreatedLink(res, linkData);
-    console.info('Short URL created: ', linkData.url);
+    try {
+      await linksMap.storeShortUrl(linkData.url, url);
+      apiController.reportCreatedLink(res, linkData);
+      console.info('Short URL created: ', linkData.url);
+    } catch (err) {
+      apiController.reportServerFailure(err);
+      return next();
+    }
     return next();
   });
 
   server.get('/link/:linkId', async (req, res, next) => {
     const linkId = req.params.linkId;
     console.info('Mapping short link: ', linkId);
-    const originalLink = await linksMap.getUrl(linkId);
+
+    try {
+      const originalLink = await linksMap.getUrl(linkId);
+    } catch (err) {
+      apiController.reportServerFailure(err);
+      return next();
+    }
     if (!originalLink) {
       console.error('Original link not found for: ', linkId);
       apiController.reportLinkNotFound(res);
@@ -78,8 +89,14 @@ async function app(console) {
   server.del('/link/:linkId', async (req, res, next) => {
     const linkId = req.params.linkId;
     const key = req.headers['x-auth-key'];
-    const url = await linksMap.getUrl(linkId);
     console.info('Request to remove link ', linkId);
+    try {
+      const url = await linksMap.getUrl(linkId);
+      apiController.redirectToOriginal(res, originalLink);
+    } catch (err) {
+      apiController.reportServerFailure(err);
+      return next();
+    }
     if (!url) {
       console.error('Url not found for shortlink ', linkId);
       apiController.reportLinkNotFound(res);
@@ -88,8 +105,12 @@ async function app(console) {
     console.info('Key = ', key);
     if ((typeof key === 'string') && validator.isValidKey(key, linkId, url)) {
       console.info('Removing link ', linkId);
-      await linksMap.removeShortLink(linkId);
-      apiController.reportDeletedLink(res);
+      try {
+        await linksMap.removeShortLink(linkId);
+        apiController.reportDeletedLink(res);
+      } catch (err) {
+        apiController.reportServerFailure(err);
+      }
       return next();
     }
     console.error('Authentification failed for link %s key %s', linkId, key);
