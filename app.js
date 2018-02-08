@@ -8,7 +8,7 @@ const server = restify.createServer({
   version: '1.0.0'
 });
 
-(async () => {
+async function app(console) {
   'use strict';
    
   server.use(restify.plugins.acceptParser(server.acceptable));
@@ -85,7 +85,7 @@ const server = restify.createServer({
       apiController.reportLinkNotFound(res);
       return next();
     }
-    console.log('Key = ', key);
+    console.info('Key = ', key);
     if ((typeof key === 'string') && validator.isValidKey(key, linkId, url)) {
       console.info('Removing link ', linkId);
       await linksMap.removeShortLink(linkId);
@@ -96,4 +96,6 @@ const server = restify.createServer({
     apiController.reportNoCredentials(res);
     return next();
   });
-})()
+}
+
+module.exports = app;

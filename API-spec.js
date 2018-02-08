@@ -1,10 +1,17 @@
 (() => {
   'use strict';
 
+  const mockConsole = {
+    info: () => {},
+    error: () => {},
+    log: () => {}
+  }
+
   const chai = require('chai');
   const urlencode = require('urlencode');
   const clients = require('restify-clients');
   const expect = chai.expect;
+  const app = require('./app')(mockConsole);
   chai.should();
 
   describe('API', () => {
