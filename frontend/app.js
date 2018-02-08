@@ -38,9 +38,6 @@
         
       }
     };
-  
-  // End Controller
   });
   
-// End Function  
 })();
