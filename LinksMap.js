@@ -3,20 +3,27 @@
 
   class LinksMap {
 
-    constructor() {
+    constructor(mcClient) {
       this.map = new Map();
+      this.mcClient = mcClient;
     }
 
     getUrl(linkId) {
-      return this.map.get(linkId);
+      return new Promise((resolve, reject) => {
+        resolve(this.map.get(linkId));
+      });
     }
 
     storeShortUrl(linkId, url) {
-      this.map.set(linkId, url);
+      return new Promise((resolve, reject) => {
+        resolve(this.map.set(linkId, url));
+      });
     }
 
     removeShortLink(linkId) {
-      this.map.delete(linkId);
+      return new Promise((resolve, reject) => {
+        resolve(this.map.delete(linkId));
+      });
     }
   }
 

@@ -2,7 +2,8 @@
   'use strict';
 
   const chai = require('chai');
-  const assert = chai.assert;
+  const expect = chai.expect;
+  chai.should();
 
   const LinksMap = require('./LinksMap');
 
@@ -14,21 +15,24 @@
         linksMap = new LinksMap();
       })
 
-      it('should return nothing if key ont exists', () => {
-        assert.isTrue(typeof linksMap.getUrl('abcde') === 'undefined');
+      it('should return nothing if key ont exists', async () => {
+        const url = await linksMap.getUrl('abcde');
+        expect(url).to.be.a('undefined');
       })
 
-      it('should return value if key exists', () => {
-        linksMap.storeShortUrl('abcde', 'http://url');
-        console.log(linksMap.getUrl('abcde'));
-        assert.isTrue(linksMap.getUrl('abcde') === 'http://url');
+      it('should return value if key exists', async () => {
+        await linksMap.storeShortUrl('abcde', 'http://url');
+        const url = await linksMap.getUrl('abcde');
+        url.should.be.equal('http://url');
       })
 
-      it('should return nothing after key removed', () => {
-        linksMap.storeShortUrl('abcde', 'http://url');
-        assert.isTrue(linksMap.getUrl('abcde') === 'http://url');
-        linksMap.removeShortLink('abcde');
-        assert.isTrue(typeof linksMap.getUrl('abcde') === 'undefined');
+      it('should return nothing after key removed', async () => {
+        await linksMap.storeShortUrl('abcde', 'http://url');
+        const url = await linksMap.getUrl('abcde');
+        url.should.be.equal('http://url');
+        await linksMap.removeShortLink('abcde');
+        const neUrl = await linksMap.getUrl('abcde');
+        expect(neUrl).to.be.a('undefined');
       })
   });
 
