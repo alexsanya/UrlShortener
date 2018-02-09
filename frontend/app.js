@@ -20,6 +20,7 @@
           linkId: data.shortenUrl,
           fullLink: $scope.fullLink.substr(0, 90)
         });
+        $scope.fullLink = '';
       })
     };
     
