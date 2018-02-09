@@ -6,7 +6,7 @@ services:
     build: .
     command: "npm start"
     environment:
-      - MEMCAHCED_HOST: 'memcached:11211'
+      - MEMCACHED_HOST=memcached:11211
     ports:
      - "8080:8080"
 
