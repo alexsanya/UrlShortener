@@ -12,12 +12,14 @@ paths:
     post:
       summary: "Create new short url link"
       consumes:
-      - "text/plain"
+      - "application/json"
       produces:
       - "application/json"
       parameters:
       - in: "body"
         name: "body"
+        schema:
+          $ref: "#/definitions/UrlData"
         description: "The url string that needs to be shortenned"
         required: true
       responses:
@@ -36,8 +38,8 @@ paths:
         required: true
         description: "Short unic id generated for URL"
       - in: "header"
-        name: "security token"
-        description: "this token should identify the user who created this link"
+        name: "x-auth-key"
+        description: "this key should identify the user who created this link"
       responses:
         204:
           description: "Link deleted"
@@ -69,5 +71,11 @@ definitions:
         type: "string"
       key:
         type: "string"
+  UrlData:
+    type: "object"
+    properties:
+      url:
+        type: "string"
+        description: "URL-encoded string"
           
  
