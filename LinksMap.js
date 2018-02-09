@@ -15,8 +15,10 @@
 
     getUrl(linkId) {
       return new Promise((resolve, reject) => {
-        this.mcClient.get(linkId, (err, url) => { 
-          if (err) this.handleError(err, rejet);
+        this.mcClient.get(linkId, (err, url) => {
+          if (err) {
+            this.handleError(err, reject);
+          }
           resolve(url);
         });
       });
@@ -25,7 +27,9 @@
     storeShortUrl(linkId, url) {
       return new Promise((resolve, reject) => {
         this.mcClient.set(linkId, url, 10000, (err) => { 
-          if (err) this.handleError(err, reject)
+          if (err) {
+            this.handleError(err, reject)
+          }
           resolve();
         });
       });

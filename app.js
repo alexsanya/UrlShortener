@@ -72,18 +72,18 @@ async function app(console) {
 
     try {
       const originalLink = await linksMap.getUrl(linkId);
+      if (!originalLink) {
+        console.error('Original link not found for: ', linkId);
+        apiController.reportLinkNotFound(res);
+        return next();
+      }
+      console.info('Redirect to original link: ', originalLink);
+      apiController.redirectToOriginal(res, originalLink);
+      return next();
     } catch (err) {
       apiController.reportServerFailure(err);
       return next();
     }
-    if (!originalLink) {
-      console.error('Original link not found for: ', linkId);
-      apiController.reportLinkNotFound(res);
-      return next();
-    }
-    console.info('Redirect to original link: ', originalLink);
-    apiController.redirectToOriginal(res, originalLink);
-    return next();
   });
 
   server.del('/link/:linkId', async (req, res, next) => {
@@ -92,30 +92,29 @@ async function app(console) {
     console.info('Request to remove link ', linkId);
     try {
       const url = await linksMap.getUrl(linkId);
-      apiController.redirectToOriginal(res, originalLink);
+      if (!url) {
+        console.error('Url not found for shortlink ', linkId);
+        apiController.reportLinkNotFound(res);
+        return next();
+      }
+      console.info('Key = ', key);
+      if ((typeof key === 'string') && validator.isValidKey(key, linkId, url)) {
+        console.info('Removing link ', linkId);
+        try {
+          await linksMap.removeShortLink(linkId);
+          apiController.reportDeletedLink(res);
+        } catch (err) {
+          apiController.reportServerFailure(err);
+        }
+        return next();
+      }
+      console.error('Authentification failed for link %s key %s', linkId, key);
+      apiController.reportNoCredentials(res);
+      return next();
     } catch (err) {
       apiController.reportServerFailure(err);
       return next();
     }
-    if (!url) {
-      console.error('Url not found for shortlink ', linkId);
-      apiController.reportLinkNotFound(res);
-      return next();
-    }
-    console.info('Key = ', key);
-    if ((typeof key === 'string') && validator.isValidKey(key, linkId, url)) {
-      console.info('Removing link ', linkId);
-      try {
-        await linksMap.removeShortLink(linkId);
-        apiController.reportDeletedLink(res);
-      } catch (err) {
-        apiController.reportServerFailure(err);
-      }
-      return next();
-    }
-    console.error('Authentification failed for link %s key %s', linkId, key);
-    apiController.reportNoCredentials(res);
-    return next();
   });
 
 
