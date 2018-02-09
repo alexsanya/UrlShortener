@@ -5,6 +5,8 @@ services:
   webapp:
     build: .
     command: "npm start"
+    environment:
+      - MEMCAHCED_HOST: 'memcached:11211'
     ports:
      - "8080:8080"
 

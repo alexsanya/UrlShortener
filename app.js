@@ -16,10 +16,11 @@ async function app(console) {
   server.use(restify.plugins.bodyParser());
 
   function connectToMemcache() {
-    const memcached = new Memcached(config.memcachedConnection);
+    const memcachedHost = process.env.MEMCACHED_HOST || 'localhost:11211';
+    const memcached = new Memcached(memcachedHost);
 
     return new Promise((resolve, reject) => {
-      memcached.connect(config.memcachedConnection, ( err, conn ) => {
+      memcached.connect(memcachedHost, ( err, conn ) => {
         if( err ) {
            console.error('Cannot establish connection with memcached', conn.server);
            reject();
